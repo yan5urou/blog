@@ -1,0 +1,26 @@
+name: Deploy Blog Pages
+on:
+  push:
+    branches: [ main ]
+workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+jobs:
+  build-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 拉取仓库代码
+        uses: actions/checkout@v4
+      - name: 上传网站文件
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./
+  deploy-job:
+    needs: build-job
+    runs-on: ubuntu-latest
+    environment: github-pages
+    steps:
+      - name: 部署到GitHub Pages
+        uses: actions/deploy-pages@v4
